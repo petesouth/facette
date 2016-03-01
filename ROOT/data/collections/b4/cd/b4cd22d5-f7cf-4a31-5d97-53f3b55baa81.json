@@ -14,6 +14,20 @@
                     null
                 ],
                 "range": null,
+                "title": "cpu_value_graph"
+            }
+        },
+        {
+            "id": "f2f91484-9508-4dc4-757f-f4d45dd49575",
+            "options": {
+                "constants": [
+                    null
+                ],
+                "enabled": true,
+                "percentiles": [
+                    null
+                ],
+                "range": null,
                 "title": null
             }
         }

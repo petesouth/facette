@@ -108,6 +108,8 @@ func (connector *InfluxDBConnector2) GetName() string {
 // GetPlots retrieves time series data from provider based on a query and a time interval.
 func (connector *InfluxDBConnector2) GetPlots(query *plot.Query) ([]*plot.Series, error) {
 	
+	
+	fmt.Println("influxdb2 GetPlots plot.Query=", query );
 	l := len(query.Series)
 	if l == 0 {
 		return nil, fmt.Errorf("influxdb[%s]: requested series list is empty", connector.name)
@@ -162,7 +164,8 @@ func (connector *InfluxDBConnector2) GetPlots(query *plot.Query) ([]*plot.Series
 			
 			for valueIndex, values := range row.Values {
 					
-					value, failed := values[5].(json.Number).Float64()
+					var dataIndex = len(values) - 1
+					value, failed := values[dataIndex].(json.Number).Float64()
 					if failed != nil {
 						continue
 					}
