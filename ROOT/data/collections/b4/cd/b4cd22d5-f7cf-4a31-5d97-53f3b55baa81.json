@@ -1,0 +1,23 @@
+{
+    "id": "b4cd22d5-f7cf-4a31-5d97-53f3b55baa81",
+    "name": "cpu_value_graph_collection",
+    "description": "",
+    "entries": [
+        {
+            "id": "1542d1a7-14b8-410b-4bb3-40d9b0c12c81",
+            "options": {
+                "constants": [
+                    null
+                ],
+                "enabled": true,
+                "percentiles": [
+                    null
+                ],
+                "range": null,
+                "title": null
+            }
+        }
+    ],
+    "parent": "",
+    "options": null
+}

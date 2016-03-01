@@ -1,0 +1,6 @@
+/*!
+ * Facette - Web graphing front-end
+ * @author   Vincent Batoufflet <vincent@facette.io>
+ * @link     https://facette.io/
+ * @license  BSD
+ */@-moz-keyframes slide-down{0%{-moz-transform:translateY(-100%)}100%{-moz-transform:translateY(0)}}@-ms-keyframes slide-down{0%{-ms-transform:translateY(-100%)}100%{-ms-transform:translateY(0)}}@-o-keyframes slide-down{0%{-o-transform:translateY(-100%)}100%{-o-transform:translateY(0)}}@-webkit-keyframes slide-down{0%{-webkit-transform:translateY(-100%)}100%{-webkit-transform:translateY(0)}}@keyframes slide-down{0%{transform:translateY(-100%)}100%{transform:translateY(0)}}body{font-family:Lato,Arial,sans-serif;font-size:13px}body>header,body>nav{display:none}article>footer,article>header{display:none}

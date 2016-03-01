@@ -8,6 +8,7 @@ TAGS ?= facette \
 	graphite \
 	kairosdb \
 	influxdb \
+	influxdb2 \
 	rrd
 
 PREFIX ?= /usr/local
@@ -305,7 +306,7 @@ $(TMPL_OUTPUT): $(TMPL_SRC)
 ifeq ($(UNAME), Darwin)
 	$(eval COPY_CMD=rsync -rR)
 else
-	$(eval COPY_CMD=cp -r --parents)
+	$(eval COPY_CMD=cp -r -P)
 endif
 	@$(call mesg_start,build,Copying template files...)
 	@install -d -m 0755 $(BUILD_DIR)/template && \

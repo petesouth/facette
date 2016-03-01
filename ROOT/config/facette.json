@@ -1,0 +1,7 @@
+{
+	"bind": ":12003",
+	"base_dir": "/usr/home/psouthwell/go/src/github.com/facette/facette/ROOT/webroot",
+	"providers_dir": "/usr/home/psouthwell/go/src/github.com/facette/facette/ROOT/config/providers",
+	"data_dir": "/usr/home/psouthwell/go/src/github.com/facette/facette/ROOT/data",
+	"pid_file": "/usr/home/psouthwell/go/src/github.com/facette/facette/ROOT/facette.pid"
+}

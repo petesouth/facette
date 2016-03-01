@@ -1,0 +1,13 @@
+{
+	"connector": {
+		"type": "influxdb2",
+		"host": "http://localhost:8086",
+		"database": "collectd",
+		"username": "psouthwell",
+		"pattern": "(?P<source>[^\\.]+)\\.(?P<metric>.+)"
+	},
+
+	"filters": [
+		{ "action": "rewrite", "target": "source", "pattern": "_", "into": "." }
+	]
+}

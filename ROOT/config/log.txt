@@ -1,0 +1,2 @@
+*** influxdb connector succesfully initialized %v {influxdb http://localhost:8086 false psouthwell  collectd {{http  <nil> localhost:8086    } psouthwell  0xc820120480 InfluxDBClient } 0xc820087180 map[]}
+values= [2016-02-25T23:05:51.101967478Z serverA <nil> us_west <nil> <nil> 0.6]

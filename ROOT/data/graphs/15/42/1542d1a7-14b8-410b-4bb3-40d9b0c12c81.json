@@ -1,0 +1,34 @@
+{
+    "id": "1542d1a7-14b8-410b-4bb3-40d9b0c12c81",
+    "name": "cpu_value_graph",
+    "description": "",
+    "type": 2,
+    "stack_mode": 2,
+    "unit_type": 1,
+    "unit_legend": "cpu value",
+    "groups": [
+        {
+            "name": "group0",
+            "type": 2,
+            "stack_id": 0,
+            "series": [],
+            "options": {}
+        },
+        {
+            "name": "group:cpu_value_metric",
+            "type": 1,
+            "stack_id": 0,
+            "series": [
+                {
+                    "name": "group:cpu_value_metric",
+                    "origin": "influxdb2",
+                    "source": "localhost",
+                    "metric": "group:cpu_value_metric",
+                    "options": null
+                }
+            ],
+            "options": {}
+        }
+    ],
+    "template": false
+}
