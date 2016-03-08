@@ -114,21 +114,61 @@ func (connector *InfluxDBConnector2) GetPlots(query *plot.Query) ([]*plot.Series
 	if l == 0 {
 		return nil, fmt.Errorf("influxdb[%s]: requested series list is empty", connector.name)
 	}
+	
+	results := make([]*plot.Series, 0)
+	
+    for _, series := range query.Series {
+		batches, _ := connector.GetPlotsFromSourceMetric(series.Name, series.Source, series.Metric, query.Sample, query.StartTime, query.EndTime )
+		for _, batch := range batches { 
+			results = append(results, batch)
+		}
+	} 
+    
+    for _, batch := range results { 
+		fmt.Println("results=: batch.name=", batch.Name, " plots=", len(batch.Plots) )
+	}
+	
+	
+	return results, nil
+}
 
-	columns := make([]string, l)
-	for i, series := range query.Series {
-		columns[i] = connector.series[series.Source][series.Metric][1]
+
+func (connector *InfluxDBConnector2) GetPlotsFromSourceMetric(seriesName string, source string, metric string, sample int, startTime time.Time, endTime time.Time) ([]*plot.Series, error) {
+	
+	results := make([]*plot.Series, 0)
+	var queryStrings [] string = strings.Split(metric, "/")
+	var influxdbQuery string = ""
+	
+	if len(queryStrings) ==3 {
+		influxdbQuery = fmt.Sprintf(
+			"select * from %s where host='%s' and type='%s' and type_instance='%s' time > %ds and time < %ds order by time asc",
+			queryStrings[0],
+			source,
+			queryStrings[1],
+			queryStrings[2],
+			startTime.Unix(),
+			endTime.Unix(),
+		)
+	} else if len(queryStrings) == 2 {
+		influxdbQuery = fmt.Sprintf(
+			"select * from %s where host='%s' and type='%s' time > %ds and time < %ds order by time asc",
+			queryStrings[0],
+			source,
+			queryStrings[1],
+			startTime.Unix(),
+			endTime.Unix(),
+		)
+	} else {
+		influxdbQuery = fmt.Sprintf(
+			"select * from %s where host='%s' time > %ds and time < %ds order by time asc",
+			queryStrings[0],
+			source,
+			startTime.Unix(),
+			endTime.Unix(),
+		)
+		
 	}
 
-	// Old Query
-	// "select %s from %s where time > %ds and time < %ds order asc",
-		
-	influxdbQuery := fmt.Sprintf(
-		"select * from %s where time > %ds and time < %ds order by time asc",
-		strings.Join(columns, ","),
-		query.StartTime.Unix(),
-		query.EndTime.Unix(),
-	)
 	
 	fmt.Println("influxdbQuery=", influxdbQuery)
 	q := client.Query{
@@ -141,8 +181,7 @@ func (connector *InfluxDBConnector2) GetPlots(query *plot.Query) ([]*plot.Series
 		return nil, fmt.Errorf("influxdb[%s]: unable to perform query: %s", connector.name, err)
 	 }
 
-	results := make([]*plot.Series, 0)
-	step := int(query.EndTime.Sub(query.StartTime) / time.Duration(query.Sample))
+	step := int(endTime.Sub(startTime) / time.Duration(sample))
 	
 	for _, result := range response.Results {
 		
@@ -155,12 +194,10 @@ func (connector *InfluxDBConnector2) GetPlots(query *plot.Query) ([]*plot.Series
 			}
 			
 			var plotSeries = &plot.Series{
-				Name: row.Name,
+				Name: seriesName,
 				Step: step,
 				Plots:  make([]plot.Plot, valuesLength),  
 			}
-			
-			fmt.Println("plotSeries.Plots=", len(plotSeries.Plots) )
 			
 			for valueIndex, values := range row.Values {
 					
@@ -183,11 +220,11 @@ func (connector *InfluxDBConnector2) GetPlots(query *plot.Query) ([]*plot.Series
 		}
 	}
 	
-		
-	
-	
 	return results, nil
+	
 }
+
+
 
 // Refresh triggers a full connector data update.
 func (connector *InfluxDBConnector2) Refresh(originName string, outputChan chan<- *catalog.Record) error {
@@ -208,9 +245,34 @@ func (connector *InfluxDBConnector2) Refresh(originName string, outputChan chan<
 		for _, row := range result.Series {
 			
 			for _, values := range row.Values {
-										
-					var metricName string = row.Name
-					var sourceName string = values[1].(string)
+					var columnValuesMap map[string]string = make(map[string]string)
+					
+					for columnIndex, column := range row.Columns {
+						columnValuesMap[column] = values[columnIndex].(string)
+					}
+					
+					var seriesName = row.Name
+					var host = columnValuesMap["host"]
+					var typeName = columnValuesMap["type"]
+					var typeInstance = columnValuesMap["type_instance"]			
+								
+					
+					// Calculate Source
+					var sourceName string = host
+					
+					
+					// Calculate Metric Name
+					var metricName string = seriesName
+					
+					
+					if len(typeName) > 0 {
+						metricName = metricName + "/" + typeName
+					}
+					
+					if len(typeInstance) > 0 {
+						metricName = metricName + "/" + typeInstance
+					}
+					
 					
 					if _, ok := connector.series[sourceName]; !ok {
 							connector.series[sourceName] = make(map[string][2]string)

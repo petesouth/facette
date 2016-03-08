@@ -1,0 +1,3 @@
+curl -G 'http://localhost:8086/query?pretty=true' --data-urlencode "db=collectd" --data-urlencode "q=SELECT value FROM cpu_load_short WHERE hostname='localhost'"
+
+curl -G 'http://localhost:8086/query?pretty=true' --data-urlencode "db=collectd" --data-urlencode "q=select * from /.*/"
