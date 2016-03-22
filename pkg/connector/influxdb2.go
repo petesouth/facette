@@ -141,7 +141,7 @@ func (connector *InfluxDBConnector2) GetPlotsFromSourceMetric(seriesName string,
 	
 	if len(queryStrings) ==3 {
 		influxdbQuery = fmt.Sprintf(
-			"select * from %s where host='%s' and type='%s' and type_instance='%s' time > %ds and time < %ds order by time asc",
+			"select * from %s where host='%s' and type='%s' and type_instance='%s' time > %ds and time < %ds order by time asc LIMIT 10000",
 			queryStrings[0],
 			source,
 			queryStrings[1],
@@ -151,7 +151,7 @@ func (connector *InfluxDBConnector2) GetPlotsFromSourceMetric(seriesName string,
 		)
 	} else if len(queryStrings) == 2 {
 		influxdbQuery = fmt.Sprintf(
-			"select * from %s where host='%s' and type='%s' time > %ds and time < %ds order by time asc",
+			"select * from %s where host='%s' and type='%s' time > %ds and time < %ds order by time asc LIMIT 10000",
 			queryStrings[0],
 			source,
 			queryStrings[1],
@@ -160,7 +160,7 @@ func (connector *InfluxDBConnector2) GetPlotsFromSourceMetric(seriesName string,
 		)
 	} else {
 		influxdbQuery = fmt.Sprintf(
-			"select * from %s where host='%s' time > %ds and time < %ds order by time asc",
+			"select * from %s where host='%s' time > %ds and time < %ds order by time asc LIMIT 10000",
 			queryStrings[0],
 			source,
 			startTime.Unix(),
