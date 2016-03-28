@@ -17,6 +17,9 @@ import (
 	"github.com/influxdata/influxdb/client"
 )
 
+
+const QUERY_BATCH_SIZE int = 10000
+
 // InfluxDBConnector2 represents the main structure of the InfluxDB connector.
 type InfluxDBConnector2 struct {
 	name     string
@@ -141,30 +144,33 @@ func (connector *InfluxDBConnector2) GetPlotsFromSourceMetric(seriesName string,
 	
 	if len(queryStrings) ==3 {
 		influxdbQuery = fmt.Sprintf(
-			"select * from %s where host='%s' and type='%s' and type_instance='%s' time > %ds and time < %ds order by time asc LIMIT 10000",
+			"select * from %s where host='%s' and type='%s' and type_instance='%s' time > %ds and time < %ds order by time desc LIMIT %d",
 			queryStrings[0],
 			source,
 			queryStrings[1],
 			queryStrings[2],
 			startTime.Unix(),
 			endTime.Unix(),
+                        QUERY_BATCH_SIZE,
 		)
 	} else if len(queryStrings) == 2 {
 		influxdbQuery = fmt.Sprintf(
-			"select * from %s where host='%s' and type='%s' time > %ds and time < %ds order by time asc LIMIT 10000",
+			"select * from %s where host='%s' and type='%s' time > %ds and time < %ds order by time desc LIMIT %d",
 			queryStrings[0],
 			source,
 			queryStrings[1],
 			startTime.Unix(),
 			endTime.Unix(),
+                        QUERY_BATCH_SIZE,
 		)
 	} else {
 		influxdbQuery = fmt.Sprintf(
-			"select * from %s where host='%s' time > %ds and time < %ds order by time asc LIMIT 10000",
+			"select * from %s where host='%s' time > %ds and time < %ds order by time desc LIMIT %d",
 			queryStrings[0],
 			source,
 			startTime.Unix(),
 			endTime.Unix(),
+                        QUERY_BATCH_SIZE,
 		)
 		
 	}
